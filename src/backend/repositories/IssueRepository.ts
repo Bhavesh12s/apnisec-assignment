@@ -1,6 +1,12 @@
 import { prisma } from "../utils/prisma";
 
 export class IssueRepository {
+  async findById(id: string) {
+    return prisma.issue.findUnique({
+      where: { id },
+    });
+  }
+
   async findByUser(userId: string, type?: string) {
     return prisma.issue.findMany({
       where: {
@@ -11,25 +17,20 @@ export class IssueRepository {
     });
   }
 
-  async create(data: {
-    title: string;
-    description: string;
-    type: string;
-    priority?: string;
-    status?: string;
-    userId: string;
-  }) {
-    return prisma.issue.create({
-      data: {
-        title: data.title,
-        description: data.description,
-        type: data.type,
-        priority: data.priority,
-        status: data.status,
-        user: {
-          connect: { id: data.userId },
-        },
-      },
+  async create(data: any) {
+    return prisma.issue.create({ data });
+  }
+
+  async update(id: string, data: any) {
+    return prisma.issue.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async delete(id: string) {
+    return prisma.issue.delete({
+      where: { id },
     });
   }
 }

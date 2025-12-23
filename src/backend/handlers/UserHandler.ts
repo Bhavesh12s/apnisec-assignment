@@ -1,22 +1,25 @@
 import { NextResponse } from "next/server";
-import { AuthUtil } from "../utils/auth";
+import { getUserFromToken } from "../utils/auth";
 import { UserService } from "../services/UserService";
+
+// ✅ CREATE SERVICE INSTANCE ONCE
+const userService = new UserService();
 
 export class UserHandler {
   static async getProfile(req: Request) {
-    try {
-      const auth = req.headers.get("authorization");
-      if (!auth) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
+    // ✅ SINGLE SOURCE OF AUTH TRUTH
+    const user = await getUserFromToken(req);
 
-      const token = auth.split(" ")[1];
-      const payload = AuthUtil.verifyToken(token);
-
-      const user = await UserService.getProfile(payload.userId);
-      return NextResponse.json(user);
-    } catch {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
+
+    // ✅ instance method call (NOW VALID)
+    const profile = await userService.getProfile(user.id);
+
+    return NextResponse.json(profile);
   }
 }

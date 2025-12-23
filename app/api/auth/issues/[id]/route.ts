@@ -1,26 +1,26 @@
 import { NextResponse } from "next/server";
-import { IssueHandler } from "@/src/backend/issues/IssueHandler";
+import { IssueService } from "@/src/backend/services/IssueService";
 import { getUserFromToken } from "@/src/backend/utils/auth";
 
-const handler = new IssueHandler();
+const issueService = new IssueService();
 
-export async function GET(_: Request, { params }: any) {
-  const issue = await handler.get(params.id);
+export async function GET(req: Request) {
+  const user = await getUserFromToken(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { searchParams } = new URL(req.url);
+  const type = searchParams.get("type") || undefined;
+
+  const issues = await issueService.getIssuesByUser(user.id, type);
+  return NextResponse.json(issues);
+}
+
+export async function POST(req: Request) {
+  const user = await getUserFromToken(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  const issue = await issueService.createIssue({ ...body, userId: user.id });
+
   return NextResponse.json(issue);
-}
-
-export async function PUT(req: Request, { params }: any) {
-  const user = getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const updated = await handler.update(req, params.id);
-  return NextResponse.json(updated);
-}
-
-export async function DELETE(_: Request, { params }: any) {
-  const user = getUserFromToken(_);
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  await handler.remove(params.id);
-  return NextResponse.json({ success: true });
 }

@@ -18,4 +18,16 @@ export class UserRepository {
       },
     });
   }
+  findById(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+    });
+  }
+
+  update(id: string, data: any) {
+    return prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
 }

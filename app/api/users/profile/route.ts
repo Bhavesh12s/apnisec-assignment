@@ -31,6 +31,6 @@ export async function GET(req: Request) {
     );
   }
 
-  const profile = await  UserRepository.findById(user.userId); // IMPORTANT
+  const profile = await  UserRepository.findById(user.id); // IMPORTANT
   return NextResponse.json(profile);
 }

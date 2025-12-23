@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { AuthService } from "../services/AuthService";
 
+const authService = new AuthService();
+
 export class AuthHandler {
   static async login(req: Request) {
     const body = await req.json();

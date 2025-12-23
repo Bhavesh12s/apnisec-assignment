@@ -1,11 +1,17 @@
 import { UserRepository } from "../repositories/UserRepository";
 
 export class UserService {
-  static getProfile(userId: string) {
-    return UserRepository.findById(userId);
+  private repo: UserRepository;
+
+  constructor() {
+    this.repo = new UserRepository();
   }
 
-  static updateProfile(userId: string, data: any) {
-    return UserRepository.update(userId, data);
+  getProfile(userId: string) {
+    return this.repo.findById(userId);
+  }
+
+  updateProfile(userId: string, data: any) {
+    return this.repo.update(userId, data);
   }
 }

@@ -1,20 +1,27 @@
 import jwt from "jsonwebtoken";
 
-export function getUserFromRequest(req: Request) {
+const JWT_SECRET = process.env.JWT_SECRET!;
+
+export type AuthUser = {
+  id: string;
+  email: string;
+};
+
+export async function getUserFromToken(
+  req: Request
+): Promise<AuthUser | null> {
   try {
     const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return null;
-    }
+    if (!authHeader?.startsWith("Bearer ")) return null;
 
     const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as { id: string; email: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: string;
+      email: string;
+    };
 
-    return decoded?.id ? decoded : null;
+    return { id: decoded.id, email: decoded.email };
   } catch {
     return null;
   }
