@@ -16,13 +16,13 @@
 //   return NextResponse.json(profile);
 // }
 import { NextResponse } from "next/server";
-import { getUserFromToken } from "@/src/backend/utils/auth";
+import { getUserFromRequest } from "@/src/backend/utils/auth";
 import { UserRepository } from "@/src/backend/repositories/UserRepository";
 
 const repo = new UserRepository();
 
 export async function GET(req: Request) {
-  const user = await getUserFromToken(req);
+  const user = await getUserFromRequest(req);
 
   if (!user) {
     return NextResponse.json(

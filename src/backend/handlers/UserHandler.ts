@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUserFromToken } from "../utils/auth";
+import { getUserFromRequest } from "@/src/backend/utils/auth";
 import { UserService } from "../services/UserService";
 
 // ✅ CREATE SERVICE INSTANCE ONCE
@@ -8,7 +8,7 @@ const userService = new UserService();
 export class UserHandler {
   static async getProfile(req: Request) {
     // ✅ SINGLE SOURCE OF AUTH TRUTH
-    const user = await getUserFromToken(req);
+    const user = await getUserFromRequest(req);
 
     if (!user) {
       return NextResponse.json(

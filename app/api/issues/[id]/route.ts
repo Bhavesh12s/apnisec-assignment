@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { IssueService } from "@/src/backend/services/IssueService";
-import { getUserFromToken } from "@/src/backend/utils/auth";
+import { getUserFromRequest } from "@/src/backend/utils/auth";
 
 const issueService = new IssueService();
 
@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const { id } = await context.params;
 
-  const user = await getUserFromToken(req);
+  const user = await getUserFromRequest(req);
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
