@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type User = {
   id: string;
   email: string;
-  name?: string | null;
 };
 
 export default function ProfilePage() {
@@ -22,7 +22,6 @@ export default function ProfilePage() {
     }
 
     try {
-      // Decode JWT payload (simple client-side decode)
       const payload = JSON.parse(atob(token.split(".")[1]));
       setUser({
         id: payload.id,
@@ -50,56 +49,92 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-8 text-white">
-        {/* HEADER */}
-        <div className="text-center mb-6">
-          <div className="w-20 h-20 mx-auto rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold">
-            {user?.email.charAt(0).toUpperCase()}
-          </div>
-          <h1 className="text-2xl font-bold mt-4">User Profile</h1>
-          <p className="text-gray-400 text-sm">
-            Manage your ApniSec account
-          </p>
-        </div>
-
-        {/* USER INFO */}
-        <div className="space-y-4 text-sm">
-          <div className="flex justify-between border-b border-slate-700 pb-2">
-            <span className="text-gray-400">Email</span>
-            <span className="font-medium">{user?.email}</span>
-          </div>
-
-          <div className="flex justify-between border-b border-slate-700 pb-2">
-            <span className="text-gray-400">User ID</span>
-            <span className="font-medium truncate max-w-[180px]">
-              {user?.id}
-            </span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="text-gray-400">Account Type</span>
-            <span className="font-medium text-green-400">Standard</span>
-          </div>
-        </div>
-
-        {/* ACTIONS */}
-        <div className="mt-8 space-y-3">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="w-full bg-blue-600 hover:bg-blue-700 transition py-2.5 rounded-lg font-semibold"
+    <div className="min-h-screen bg-black text-white flex">
+      {/* SIDEBAR */}
+      <aside className="w-64 bg-white/5 border-r border-white/10 p-6 hidden md:block">
+        <h1 className="text-xl font-semibold mb-8">ApniSec</h1>
+        <nav className="space-y-3 text-sm">
+          <Link
+            href="/dashboard"
+            className="text-gray-400 hover:text-white block"
           >
-            Back to Dashboard
-          </button>
+            📊 Dashboard
+          </Link>
+          <p className="text-blue-400">👤 Profile</p>
+        </nav>
+      </aside>
 
-          <button
-            onClick={logout}
-            className="w-full bg-red-600 hover:bg-red-700 transition py-2.5 rounded-lg font-semibold"
-          >
-            Logout
-          </button>
+      {/* MAIN */}
+      <main className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-lg bg-gradient-to-br from-slate-900 to-slate-800 border border-white/10 rounded-2xl shadow-2xl p-8">
+          {/* HEADER */}
+          <div className="text-center mb-8">
+            <div className="w-20 h-20 mx-auto rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold">
+              {user?.email.charAt(0).toUpperCase()}
+            </div>
+            <h1 className="text-2xl font-semibold mt-4">User Profile</h1>
+            <p className="text-sm text-gray-400">
+              Manage your ApniSec account
+            </p>
+          </div>
+
+          {/* INFO */}
+          <div className="space-y-4 text-sm">
+            <InfoRow label="Email" value={user?.email || ""} />
+            <InfoRow label="User ID" value={user?.id || ""} truncate />
+            <InfoRow
+              label="Account Type"
+              value="Standard"
+              valueClass="text-green-400"
+            />
+          </div>
+
+          {/* ACTIONS */}
+          <div className="mt-8 space-y-3">
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="w-full bg-blue-600 hover:bg-blue-700 transition py-2.5 rounded-lg font-semibold"
+            >
+              Back to Dashboard
+            </button>
+
+            <button
+              onClick={logout}
+              className="w-full bg-red-600 hover:bg-red-700 transition py-2.5 rounded-lg font-semibold"
+            >
+              Logout
+            </button>
+          </div>
         </div>
-      </div>
+      </main>
+    </div>
+  );
+}
+
+/* ---------- SMALL COMPONENT ---------- */
+
+function InfoRow({
+  label,
+  value,
+  truncate,
+  valueClass = "",
+}: {
+  label: string;
+  value: string;
+  truncate?: boolean;
+  valueClass?: string;
+}) {
+  return (
+    <div className="flex justify-between items-center border-b border-white/10 pb-2">
+      <span className="text-gray-400">{label}</span>
+      <span
+        className={`font-medium ${
+          truncate ? "max-w-[220px] truncate" : ""
+        } ${valueClass}`}
+        title={value}
+      >
+        {value}
+      </span>
     </div>
   );
 }

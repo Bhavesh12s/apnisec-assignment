@@ -1,27 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-/**
- * ✅ PAGE-SPECIFIC SEO
- * Overrides layout metadata for homepage
- */
 export const metadata: Metadata = {
-  title: "ApniSec | Security as a Service",
+  title: "ApniSec | Security Issue Management Platform",
   description:
-    "ApniSec provides Cloud Security, Red Teaming, and VAPT solutions for modern businesses.",
+    "ApniSec helps security teams track, manage, and resolve Cloud Security, Red Team, and VAPT issues efficiently.",
 };
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
       {/* NAVBAR */}
-      <nav className="flex justify-between items-center px-8 py-4 border-b border-gray-800">
+      <nav className="flex justify-between items-center px-8 py-4 border-b border-white/10 backdrop-blur-xl">
         <h1 className="text-2xl font-bold text-green-400">ApniSec</h1>
-        <div className="space-x-6">
-          <Link href="#services">Services</Link>
+
+        <div className="flex items-center gap-6 text-sm">
+          <a href="#features" className="text-gray-300 hover:text-white">
+            Features
+          </a>
           <Link
             href="/login"
-            className="bg-white text-black px-4 py-2 rounded"
+            className="px-4 py-2 rounded-lg bg-white text-black font-medium hover:bg-gray-200 transition"
           >
             Login
           </Link>
@@ -29,57 +28,94 @@ export default function HomePage() {
       </nav>
 
       {/* HERO */}
-      <section className="text-center py-24 px-6">
-        <h1 className="text-4xl font-bold mb-4">
-          Security as a Service for Modern Companies
-        </h1>
-        <p className="text-gray-400 max-w-2xl mx-auto">
-          ApniSec helps organizations protect their infrastructure through
-          Cloud Security, Red Teaming, and VAPT.
-        </p>
+      <section className="max-w-6xl mx-auto px-6 py-28 grid md:grid-cols-2 gap-14 items-center">
+        <div>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+            Security Issue Management
+            <br />
+            <span className="text-blue-400">Built for Cyber Teams</span>
+          </h1>
 
-        <div className="mt-8">
-          <Link
-            href="/register"
-            className="bg-white text-black px-6 py-3 rounded font-semibold"
-          >
-            Get Started
-          </Link>
+          <p className="mt-6 text-gray-300 text-sm leading-relaxed max-w-xl">
+            ApniSec enables security teams to track vulnerabilities, manage
+            assessments, and resolve issues across Cloud Security, Red Teaming,
+            and VAPT — all from a single secure dashboard.
+          </p>
+
+          <div className="mt-8 flex gap-4">
+            <Link
+              href="/register"
+              className="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition font-semibold"
+            >
+              Get Started
+            </Link>
+
+            <Link
+              href="/login"
+              className="px-6 py-3 rounded-lg border border-white/20 hover:bg-white/10 transition"
+            >
+              Sign In
+            </Link>
+          </div>
+        </div>
+
+        {/* HERO VISUAL PLACEHOLDER */}
+       <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+        <img
+          src="/dashboard-preview.png"
+          alt="ApniSec Dashboard Preview"
+          className="w-full object-cover"
+          />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         </div>
       </section>
 
-      {/* SERVICES */}
+      {/* FEATURES */}
       <section
-        id="services"
-        className="grid md:grid-cols-3 gap-6 px-8 py-16 bg-gray-900"
+        id="features"
+        className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-3 gap-8"
       >
-        <Service
+        <Feature
+          icon="🛡"
           title="Cloud Security"
-          desc="Secure cloud infrastructure with continuous monitoring."
+          desc="Monitor, track, and manage cloud security issues with full visibility."
         />
-        <Service
+        <Feature
+          icon="🎯"
           title="Red Team Assessment"
-          desc="Simulated attacks to test your organization’s defenses."
+          desc="Track simulated attack findings and manage remediation progress."
         />
-        <Service
+        <Feature
+          icon="🧪"
           title="VAPT"
-          desc="Identify vulnerabilities before attackers do."
+          desc="Identify vulnerabilities early and manage penetration testing results."
         />
       </section>
 
       {/* FOOTER */}
-      <footer className="text-center text-gray-500 py-6 border-t border-gray-800">
+      <footer className="text-center text-gray-500 py-8 border-t border-white/10">
         © {new Date().getFullYear()} ApniSec. All rights reserved.
       </footer>
     </main>
   );
 }
 
-function Service({ title, desc }: { title: string; desc: string }) {
+/* ---------- SMALL COMPONENT ---------- */
+
+function Feature({
+  icon,
+  title,
+  desc,
+}: {
+  icon: string;
+  title: string;
+  desc: string;
+}) {
   return (
-    <div className="bg-black border border-gray-800 p-6 rounded">
-      <h3 className="font-bold text-lg mb-2">{title}</h3>
-      <p className="text-gray-400">{desc}</p>
+    <div className="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-xl hover:bg-white/10 transition">
+      <div className="text-3xl mb-4">{icon}</div>
+      <h3 className="font-semibold text-lg mb-2">{title}</h3>
+      <p className="text-sm text-gray-400">{desc}</p>
     </div>
   );
 }
